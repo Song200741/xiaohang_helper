@@ -1,15 +1,48 @@
-# python缓存
+# ===================== IDE 配置文件（PyCharm）=====================
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea/**
+# 缓存、本地窗口记录
+.idea/caches/
+.idea/workspace.xml
+
+# ===================== Python 缓存文件 =====================
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-# 虚拟环境
+*.py[cod]
+*$py.class
+
+# ===================== 虚拟环境 venv（重点！体积超大） =====================
 venv/
 env/
-# 日志、临时文件
+ENV/
+.env/
+venv/**
+
+# ===================== 密钥、配置文件（防止API密钥泄露） =====================
+.env
+config.py
+# config_template.py
+
+# ===================== 日志、临时文件 =====================
 *.log
+logs/
+temp/
+tmp/
 *.tmp
-# streamlit缓存
+
+# ===================== 系统自带垃圾文件 =====================
+# Windows
+Thumbs.db
+Desktop.ini
+# Mac
+.DS_Store
+._.DS_Store
+
+# ===================== Streamlit 缓存 =====================
 .streamlit/
-# API密钥配置（防止泄露key）
-config_secret.py
+.streamlit/cache/

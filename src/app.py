@@ -50,8 +50,9 @@ def main():
         end_time = time.time()
         st.session_state.messages.append({"role": "assistant", "content": answer_text})
         
-        elapsed_time = round(end_time - start_time, 2)
-        st.caption(f"回答用时：{elapsed_time}秒")
+        elapsed_time = round(end_time - start_time, 1)
+        answer_length = len(answer_text)
+        st.caption(f"回答字数：{answer_length} 字 · 耗时：{elapsed_time} 秒")
         
         st.session_state.history.append({
             "time": time.strftime("%H:%M:%S"),

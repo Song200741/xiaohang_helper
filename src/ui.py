@@ -196,27 +196,27 @@ def load_school_data():
 
 def render_preset_questions():
     st.markdown("#### 💡 试试这些推荐问题：")
-    tab1, tab2, tab3 = st.tabs(["新生专区", "在校生专区", "教师专区"])
+    tab1, tab2, tab3 = st.tabs(["新生指南", "办事流程", "应急防骗"])
 
     with tab1:
         cols_new = st.columns(2)
-        for idx, q in enumerate(PRESET_QUESTIONS["新生"]):
+        for idx, q in enumerate(PRESET_QUESTIONS["新生指南"]):
             with cols_new[idx % 2]:
                 if st.button(q, key=f"q_btn_new_{idx}"):
                     st.session_state.temp_question = q
 
     with tab2:
-        cols_stu = st.columns(2)
-        for idx, q in enumerate(PRESET_QUESTIONS["在校生"]):
-            with cols_stu[idx % 2]:
-                if st.button(q, key=f"q_btn_stu_{idx}"):
+        cols_flow = st.columns(2)
+        for idx, q in enumerate(PRESET_QUESTIONS["办事流程"]):
+            with cols_flow[idx % 2]:
+                if st.button(q, key=f"q_btn_flow_{idx}"):
                     st.session_state.temp_question = q
 
     with tab3:
-        cols_tea = st.columns(2)
-        for idx, q in enumerate(PRESET_QUESTIONS["教师"]):
-            with cols_tea[idx % 2]:
-                if st.button(q, key=f"q_btn_tea_{idx}"):
+        cols_anti = st.columns(2)
+        for idx, q in enumerate(PRESET_QUESTIONS["应急防骗"]):
+            with cols_anti[idx % 2]:
+                if st.button(q, key=f"q_btn_anti_{idx}"):
                     st.session_state.temp_question = q
 
 

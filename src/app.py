@@ -1,12 +1,12 @@
 import sys
 import os
 import time
+import pandas as pd
 import streamlit as st
 import requests
 import json
 from pathlib import Path
 
-# 自动适配导入路径，消除爆红
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from prompts import load_school_info, get_system_prompt, PRESET_QUESTIONS
 
@@ -237,14 +237,30 @@ else:
 # 拼接身份+资料+防幻觉完整系统提示词
 sys_prompt = get_system_prompt(st.session_state.user_role, school_data)
 
-# 3. 12个身份分组推荐问题按钮（课件标准）
+# 3. 12个身份分组推荐问题按钮（课件标准）- 使用tabs分组展示
 st.markdown("#### 💡 试试这些推荐问题：")
-cols = st.columns(4)
-current_questions = PRESET_QUESTIONS.get(st.session_state.user_role, [])
-for idx, q in enumerate(current_questions):
-    with cols[idx % 4]:
-        if st.button(q, key=f"q_btn_{idx}"):
-            st.session_state.temp_question = q
+tab1, tab2, tab3 = st.tabs(["新生专区", "在校生专区", "教师专区"])
+
+with tab1:
+    cols_new = st.columns(2)
+    for idx, q in enumerate(PRESET_QUESTIONS["新生"]):
+        with cols_new[idx % 2]:
+            if st.button(q, key=f"q_btn_new_{idx}"):
+                st.session_state.temp_question = q
+
+with tab2:
+    cols_stu = st.columns(2)
+    for idx, q in enumerate(PRESET_QUESTIONS["在校生"]):
+        with cols_stu[idx % 2]:
+            if st.button(q, key=f"q_btn_stu_{idx}"):
+                st.session_state.temp_question = q
+
+with tab3:
+    cols_tea = st.columns(2)
+    for idx, q in enumerate(PRESET_QUESTIONS["教师"]):
+        with cols_tea[idx % 2]:
+            if st.button(q, key=f"q_btn_tea_{idx}"):
+                st.session_state.temp_question = q
 
 # 主输入框
 user_input = st.text_input("有啥想问的？", value=st.session_state.temp_question)
@@ -327,10 +343,17 @@ if final_input:
         st.markdown(final_input)
 
     # 流式输出AI回答
+    start_time = time.time()
     with st.chat_message("assistant"):
-        answer_generator = get_ai_stream(final_input)
-        answer_text = st.write_stream(answer_generator)
+        with st.spinner("小航正在思考......"):
+            answer_generator = get_ai_stream(final_input)
+            answer_text = st.write_stream(answer_generator)
+    end_time = time.time()
     st.session_state.messages.append({"role": "assistant", "content": answer_text})
+    
+    # 显示回答用时
+    elapsed_time = round(end_time - start_time, 2)
+    st.caption(f"回答用时：{elapsed_time}秒")
     
     # 保存问答历史记录
     st.session_state.history.append({
@@ -342,6 +365,12 @@ if final_input:
 
 # 页面下方显示问答历史（折叠式）
 st.divider()
+col1, col2 = st.columns([4, 1])
+with col2:
+    if st.button("清空历史"):
+        st.session_state.history = []
+        st.rerun()
+
 with st.expander(f"📝 问答历史 ({len(st.session_state.history)}条)", expanded=False):
     if st.session_state.history:
         for item in reversed(st.session_state.history):
@@ -357,4 +386,3 @@ with st.expander(f"📝 问答历史 ({len(st.session_state.history)}条)", expa
 """, unsafe_allow_html=True)
     else:
         st.info("暂无问答记录，开始提问吧！")
-

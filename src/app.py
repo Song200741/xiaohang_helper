@@ -1,5 +1,6 @@
 import sys
 import os
+import time
 import streamlit as st
 import requests
 import json
@@ -194,6 +195,8 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 if "temp_question" not in st.session_state:
     st.session_state.temp_question = ""
+if "history" not in st.session_state:
+    st.session_state.history = []
 
 # 1. 身份选择（课件标准：新生/在校生/教师）
 user_role = st.selectbox(
@@ -328,4 +331,30 @@ if final_input:
         answer_generator = get_ai_stream(final_input)
         answer_text = st.write_stream(answer_generator)
     st.session_state.messages.append({"role": "assistant", "content": answer_text})
+    
+    # 保存问答历史记录
+    st.session_state.history.append({
+        "time": time.strftime("%H:%M:%S"),
+        "role": st.session_state.user_role,
+        "question": final_input,
+        "answer": answer_text
+    })
+
+# 页面下方显示问答历史（折叠式）
+st.divider()
+with st.expander(f"📝 问答历史 ({len(st.session_state.history)}条)", expanded=False):
+    if st.session_state.history:
+        for item in reversed(st.session_state.history):
+            st.markdown(f"""
+<div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 12px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #6366f1;">
+    <div style="font-weight: 600; color: #334155; margin-bottom: 8px;">
+        <span style="color: #6366f1;">[{item['time']}]</span> {item['role']} 提问：{item['question']}
+    </div>
+    <div style="color: #475569; line-height: 1.6;">
+        {item['answer']}
+    </div>
+</div>
+""", unsafe_allow_html=True)
+    else:
+        st.info("暂无问答记录，开始提问吧！")
 

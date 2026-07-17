@@ -1,5 +1,9 @@
+import sys
+import os
 import time
 import streamlit as st
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from ui import (
     init_session_state,
@@ -60,6 +64,26 @@ def main():
             "question": final_input,
             "answer": answer_text
         })
+        
+        if not st.session_state.conversations:
+            st.session_state.conversations.append({
+                "id": 1,
+                "time": time.strftime("%Y-%m-%d %H:%M:%S"),
+                "role": st.session_state.user_role,
+                "records": [
+                    {
+                        "time": time.strftime("%Y-%m-%d %H:%M:%S"),
+                        "question": final_input,
+                        "answer": answer_text
+                    }
+                ]
+            })
+        else:
+            st.session_state.conversations[-1]["records"].append({
+                "time": time.strftime("%Y-%m-%d %H:%M:%S"),
+                "question": final_input,
+                "answer": answer_text
+            })
     
     render_history()
 

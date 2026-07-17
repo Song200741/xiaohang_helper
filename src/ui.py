@@ -1,4 +1,5 @@
 import streamlit as st
+import time
 from pathlib import Path
 from prompts import PRESET_QUESTIONS
 
@@ -14,6 +15,8 @@ def init_session_state():
         st.session_state.temp_question = ""
     if "history" not in st.session_state:
         st.session_state.history = []
+    if "conversations" not in st.session_state:
+        st.session_state.conversations = []
 
 
 def set_page_config():
@@ -176,7 +179,7 @@ def render_role_selector():
 
 def load_school_data():
     school_data = ""
-    data_dir = Path("data")
+    data_dir = Path(__file__).parent.parent / "data"
     content_list = []
 
     md_files = sorted(data_dir.glob("*.md"))
@@ -191,6 +194,7 @@ def load_school_data():
             except Exception as e:
                 st.warning(f"⚠️ 读取文件 {file_path.name} 失败：{str(e)}")
         school_data = "\n\n".join(content_list)
+    
     return school_data
 
 
@@ -236,25 +240,56 @@ def render_messages():
 
 def render_history():
     st.divider()
-    col1, col2 = st.columns([4, 1])
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col1:
+        if st.button("🔄 新对话", key="new_conversation"):
+            new_id = len(st.session_state.conversations) + 1
+            st.session_state.conversations.append({
+                "id": new_id,
+                "time": time.strftime("%Y-%m-%d %H:%M:%S"),
+                "role": st.session_state.user_role,
+                "records": []
+            })
+            st.session_state.messages = []
+            st.rerun()
     with col2:
+        if st.session_state.conversations:
+            text = ""
+            for conv in st.session_state.conversations:
+                text += f"=== 第{conv['id']}次对话 · {conv['time']} · {conv['role']} ===\n"
+                for record in conv['records']:
+                    text += f"【{record['time']}】\n"
+                    text += f"问：{record['question']}\n"
+                    text += f"答：{record['answer']}\n"
+                    text += "---\n"
+                text += "\n"
+            st.download_button(
+                label="📥 导出对话",
+                data=text,
+                file_name=f"小航对话记录_{time.strftime('%Y%m%d')}.txt",
+                mime="text/plain",
+            )
+    with col3:
         if st.button("清空历史"):
             st.session_state.history = []
             st.session_state.messages = []
+            st.session_state.conversations = []
             st.rerun()
 
-    with st.expander(f"📝 问答历史 ({len(st.session_state.history)}条)", expanded=False):
-        if st.session_state.history:
-            for item in reversed(st.session_state.history):
-                st.markdown(f"""
-<div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 12px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #6366f1;">
-    <div style="font-weight: 600; color: #334155; margin-bottom: 8px;">
-        <span style="color: #6366f1;">[{item['time']}]</span> {item['role']} 提问：{item['question']}
-    </div>
-    <div style="color: #475569; line-height: 1.6;">
-        {item['answer']}
-    </div>
+    with st.expander(f"📝 对话历史", expanded=False):
+        if st.session_state.conversations:
+            for conv in reversed(st.session_state.conversations):
+                with st.expander(f"第{conv['id']}次对话 · {conv['time']}", expanded=False):
+                    if conv['records']:
+                        for record in reversed(conv['records']):
+                            st.markdown(f"""
+<div style="border-radius: 12px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #6366f1;">
+    <div style="font-weight: 600; color: #6366f1; margin-bottom: 8px;">[{record['time']}]</div>
+    <div style="font-weight: 600; color: #334155; margin-bottom: 4px;">问：{record['question']}</div>
+    <div style="color: #475569; line-height: 1.6;">答：{record['answer']}</div>
 </div>
 """, unsafe_allow_html=True)
+                    else:
+                        st.info("该对话暂无问答记录")
         else:
-            st.info("暂无问答记录，开始提问吧！")
+            st.info("暂无对话记录，开始提问吧！")

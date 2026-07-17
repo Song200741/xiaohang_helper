@@ -225,9 +225,14 @@ def render_preset_questions():
 
 
 def render_input():
-    user_input = st.text_input("有啥想问的？", value=st.session_state.temp_question)
+    if "user_input" not in st.session_state:
+        st.session_state.user_input = ""
+    
     if st.session_state.temp_question != "":
+        st.session_state.user_input = st.session_state.temp_question
         st.session_state.temp_question = ""
+    
+    user_input = st.text_input("有啥想问的？", value=st.session_state.user_input, key="main_input")
     return user_input.strip()
 
 

@@ -5,9 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b22840f6-1d7d-43b8-9ffb-13fcc8bed571" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/新生入学.md" beforeDir="false" afterPath="$PROJECT_DIR$/data/新生入学.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/prompts.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/prompts.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_streamlit.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +39,7 @@
   &quot;keyToString&quot;: {
     &quot;Python.prompts.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/SH/Desktop/xiaohang_helper&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -75,6 +79,10 @@
       <workItem from="1784164591361" duration="46000" />
       <workItem from="1784165736095" duration="11358000" />
       <workItem from="1784204629194" duration="14000" />
+      <workItem from="1784256539570" duration="2333000" />
+      <workItem from="1784273451050" duration="125000" />
+      <workItem from="1784273816528" duration="157000" />
+      <workItem from="1784274123496" duration="212000" />
     </task>
     <servers />
   </component>

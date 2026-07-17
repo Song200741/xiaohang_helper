@@ -37,7 +37,9 @@ def main():
     final_input = render_input()
     render_messages()
     
-    if final_input:
+    if not final_input.strip():
+        st.warning("请输入问题后再提问~")
+    else:
         st.session_state.messages.append({"role": "user", "content": final_input})
         with st.chat_message("user"):
             st.markdown(final_input)
